@@ -50,9 +50,7 @@ public class TransmissionMongoDB {
 	
 	public void transmission(ArrayList<List<String>> changements)
 	{
-		System.out.println(changements.size());
 		List<String> keys = changements.get(0);
-		
 		for(int i=1;i<changements.size();i++)
 		{
 			envoi(keys, changements.get(i));
