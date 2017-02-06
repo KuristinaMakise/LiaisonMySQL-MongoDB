@@ -33,10 +33,16 @@ public class ConnexionMySQL
 		Statement stmt = null;
 		Connection c = null;
 		
-		/*ResultSet rs = null;
-		ResultSetMetaData rsmd = null;*/
+		ResultSet rs = null;
 		
-		donneesPourMongoDB = new ArrayList<List<String>>();
+		
+		
+		//ResultSetMetaData rsmd = null;
+		
+		//donneesPourMongoDB = new ArrayList<List<String>>();
+		donneesPourMongoDB.clear();
+		
+		
 		nomColonnes = new ArrayList<String>();
 		
 		try
@@ -50,6 +56,15 @@ public class ConnexionMySQL
 			//String sql = "INSERT INTO `Trajet` (`id`,`depart`,`arrivee`,`cout`,`temps`,`gps`) VALUES (1,\"P.O. Box 885, 1348 Dui Road\",\"Ap #839-6507 Donec Rd.\",6017,35,\"-9.82013, 164.80831\");";
 			//stmt.executeUpdate(sql);
 			
+			
+			String sql = "SELECT * FROM Trajet";
+			rs = stmt.executeQuery(sql);
+			
+			while(rs.next())
+			{
+				System.out.println(rs.getString("UPDATE_DATE"));
+				
+			}
 			/**
 			 * Affichage de tous les id de la database
 			 */
@@ -68,11 +83,7 @@ public class ConnexionMySQL
 		    
 		    new MySQLThread(stmt);
 		    
-			/*while(rs.next())
-			{
-				//System.out.println(rs.getString("id"));
-				
-			}*/
+			
 			
 			
 			
@@ -114,7 +125,7 @@ public class ConnexionMySQL
 			}
 			String lastUpdate = sdf.format(dt);
 			
-			String sql = "SELECT * FROM TRAJET WHERE UPDATE_DATE > '"+lastUpdate+"'";
+			String sql = "SELECT * FROM TRAJET WHERE update_date > '"+lastUpdate+"'";
 			
 			ResultSet rs = null;
 			ResultSetMetaData rsmd = null;
@@ -122,7 +133,7 @@ public class ConnexionMySQL
 			
 			while(true)
 			{
-				donneesPourMongoDB.clear();
+				donneesPourMongoDB = new ArrayList<List<String>>();
 				try {
 					rs = statement.executeQuery(sql);
 					rsmd = rs.getMetaData();
@@ -142,7 +153,7 @@ public class ConnexionMySQL
 							donnees.add(rs.getString(nom));
 						}
 						donneesPourMongoDB.add(donnees);
-						donnees.clear();
+						donnees = new ArrayList<String>();
 					}
 					System.out.println(donneesPourMongoDB.size());
 					
@@ -158,7 +169,7 @@ public class ConnexionMySQL
 				
 				dt = new Date();
 				lastUpdate = sdf.format(dt);
-				sql = "SELECT * FROM TRAJET WHERE UPDATE_DATE > '"+lastUpdate+"'";
+				sql = "SELECT * FROM TRAJET WHERE update_date > '"+lastUpdate+"'";
 			}
 		}
 	}
