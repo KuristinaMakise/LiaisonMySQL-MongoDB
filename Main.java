@@ -11,7 +11,7 @@ public class Main
 		
 		TransmissionMongoDB t = new TransmissionMongoDB(cMongoDB.getCollection());
 		ArrayList<List<String>> changements = new ArrayList<List<String>>();
-		ArrayList<String> ls = new ArrayList<String>();
+		List<String> ls = new ArrayList<String>();
 		
 		for(String nom : cMySQL.nomColonnes)
 		{
@@ -19,8 +19,8 @@ public class Main
 		}
 		
 		changements.add(ls);
-		
-		ls.clear();
+
+		ls = new ArrayList<String>();
 		
 		for(List<String> listeString : cMySQL.donneesPourMongoDB)
 		{
@@ -30,8 +30,10 @@ public class Main
 			}
 			
 			changements.add(ls);
-			ls.clear();
+			ls = new ArrayList<String>();
 		}
+		
+		//System.out.println(changements.get(0).size());
 		
 		/*changements.add(ls);
 		ls = new ArrayList<String>();
@@ -49,8 +51,5 @@ public class Main
 		t.transmission(changements);
 		cMongoDB.printDB();
 		cMongoDB.arret();
-
 	}
-	
-	
 }
