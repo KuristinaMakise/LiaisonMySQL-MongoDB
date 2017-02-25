@@ -33,7 +33,7 @@ public class FenetreCreationCSV extends JFrame{
 
 	private String fichierAUtiliser;
 
-	public FenetreCreationCSV(ArrayList<Connexion> connections, JTable listeCo) {
+	public FenetreCreationCSV(ArrayList<Connexion> connexions, JTable listeCo) {
 
 		JPanel panneau = new JPanel();
 		panneau.setLayout(new BoxLayout(panneau, BoxLayout.X_AXIS));
