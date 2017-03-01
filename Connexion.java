@@ -1,27 +1,22 @@
 public class Connexion {
 
-	private String nom;
 	private String adresseCo;
 	private String port;
 	private String login;
 	private String mdp;
-	private TypeBdd bdd;
+	private String bdd;
 	private String nomBdd;
 	private String nomTable;
+	private Boolean etatCo;
 
 
 	public Connexion() {
 
 
 	}
-	public Connexion(String adresseCo, String port, TypeBdd bdd, String nom) {
+	
 
-		this.adresseCo = adresseCo;
-		this.port = port;
-		this.bdd = bdd;
-	}
-
-	public Connexion(String adresseCo, String port, TypeBdd bdd, String nom, String login, String mdp, String nomBdd, String nomTable) {
+	public Connexion(String adresseCo, String port, String bdd, String login, String mdp, String nomBdd, String nomTable, Boolean etatCo) {
 
 		this.adresseCo = adresseCo;
 		this.port = port;
@@ -30,14 +25,7 @@ public class Connexion {
 		this.bdd = bdd;
 		this.nomBdd = nomBdd;
 		this.nomTable = nomTable;
-	}
-
-	public String getNom() {
-		return nom;
-	}
-
-	public void setNom(String nom) {
-		this.nom = nom;
+		this.etatCo = etatCo;
 	}
 
 	public String getAdresseCo() {
@@ -72,11 +60,11 @@ public class Connexion {
 		this.mdp = mdp;
 	}
 
-	public TypeBdd getBdd() {
+	public String getBdd() {
 		return bdd;
 	}
 
-	public void setBdd(TypeBdd bdd) {
+	public void setBdd(String bdd) {
 		this.bdd = bdd;
 	}
 
@@ -95,4 +83,15 @@ public class Connexion {
 	public void setNomTable(String nomTable) {
 		this.nomTable = nomTable;
 	}
+	
+	public boolean getEtatCo()
+	{
+		return etatCo;
+	}
+	
+	public void setEtatCo(boolean etatCo)
+	{
+		this.etatCo = etatCo;
+	}
+	
 }

@@ -16,81 +16,62 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 public class FenetreCreationCSV extends JFrame{
 
-	private  JFileChooser jfc;
-
 	private ArrayList<Connexion> connexions;
+	private JPanel panneau;
 	private JTable listeCo;
-
+	private JScrollPane js;
 	private JLabel texte;
 	private JLabel fichier;
 	private JButton choisir;
 	private JButton valider;
 	private ArrayList<ConnexionMongoDB> connexionMongoDB;
 	private ArrayList<Liaison> connexionsLiaison = new ArrayList<Liaison>();
+	
 
 
 
 	private String fichierAUtiliser;
 
 	public FenetreCreationCSV(ArrayList<Connexion> connexions, JTable listeCo, ArrayList<ConnexionMongoDB> connexionMongoDB) {
-
+		
+		super("Ajout base par CSV");
+		
 		this.connexionMongoDB = connexionMongoDB;
 		
-		JPanel panneau = new JPanel();
+		panneau = new JPanel();
 		panneau.setLayout(new BoxLayout(panneau, BoxLayout.X_AXIS));
-		panneau.setPreferredSize(new Dimension(400, 125));
+		panneau.setPreferredSize(new Dimension(600, 125));
 		this.connexions = connexions;
 		this.listeCo = listeCo;
 
 		texte = new JLabel("Choisir le fichier à traiter : ");
 		fichier = new JLabel("");
+		//fichier.setPreferredSize(new Dimension(325, 25));
+		js = new JScrollPane();
+		js.add(fichier);
+		js.setPreferredSize(new Dimension(330, 50));
+		js.setMaximumSize(new Dimension(330, 50));
+		js.setViewportView(fichier);
+		js.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		choisir = new JButton("...");
 		choisir.addActionListener(new choisirFichierATravailler());
 		valider = new JButton("Valider");
 		valider.addActionListener(new BoutonValider());
-
-		panneau.add(fichier);
+		panneau.add(texte);
+		panneau.add(js);
 		panneau.add(Box.createHorizontalGlue());
 		panneau.add(choisir);
-		panneau.add(Box.createHorizontalGlue());
 		panneau.add(valider);
 
 
 		this.add(panneau);
 		this.setVisible(true);
 		pack();
-	}
-
-	/*public void lireCSV() throws Exception
-	{
-		BufferedReader br = new BufferedReader(new FileReader(fichier.getText()));
-		String ligne = null;
-		while ((ligne = br.readLine()) != null)
-		{
-			// Retourner la ligne dans un tableau
-			String[] data = ligne.split(",");
-
-
-		}
-		br.close();
-	}
-	 */
-	public TypeBdd choisirType(String type)
-	{
-		TypeBdd tb;
-		if(type.equals("MongoDB"))
-			tb = TypeBdd.MongoDB;
-		else
-			if(type.equals("MySQL"))
-				tb = TypeBdd.MySQL;
-			else
-				tb = TypeBdd.valueOf(type);
-
-		return tb;
 	}
 
 	class choisirFichierATravailler extends AbstractAction
@@ -110,6 +91,7 @@ public class FenetreCreationCSV extends JFrame{
 			dialogue.showOpenDialog(null);
 			fichierAUtiliser = ""+dialogue.getSelectedFile();      
 			fichier.setText(fichierAUtiliser);
+			fichier.repaint();
 
 		}
 
@@ -134,41 +116,29 @@ public class FenetreCreationCSV extends JFrame{
 						System.out.println(data[0]);
 						connexion.setAdresseCo(data[0]);
 						connexion.setPort(data[1]);
-						connexion.setBdd(choisirType(data[2]));
-						connexion.setNom(data[3]);
+						connexion.setBdd("MySQL");
+						connexion.setNomBdd(data[2]);
+						connexion.setNomTable(data[3]);
 						connexion.setLogin(data[4]);
 						connexion.setMdp(data[5]);
-						connexion.setNomBdd(data[6]);
-						connexion.setNomTable(data[7]);
+						
 
 						connexions.add(connexion);
-						if(choisirType(data[2]) == TypeBdd.MongoDB && !data[0].equals("") && !data[3].equals(""))
+						if(!data[0].equals("") && !data[2].equals("") && !data[3].equals("") && !data[4].equals("") && !data[5].equals(""))
 						{
-							
-							String url = "mongodb://"+data[0];
-							String nom = data[3];
-							
-							System.out.println(url);
-							System.out.println(nom);
-
-							connexionMongoDB.add(new ConnexionMongoDB(url, nom));
-
-							for(Liaison l : connexionsLiaison)
-							{
-								if(l.getConnexionMongoDB() == null)
+								String url = "jdbc:mysql://"+data[0]+"/"+data[2]+"";
+								String tmp = ""+data[2]+""+data[3];
+								
+								connexionsLiaison.add(new Liaison(url, data[4], data[5], data[3], connexionMongoDB.get(0), tmp));
+								if(connexionsLiaison.get(connexionsLiaison.size()-1).getTableMySQL().isConnected())
 								{
-									l.setConnexionMongoDB(connexionMongoDB.get(0));
+									connexion.setEtatCo(true);
 								}
-							}
-
+								else
+								{
+									connexion.setEtatCo(false);
+								}
 						}
-						else 
-							if(choisirType(data[2]) == TypeBdd.MySQL && !data[0].equals("") && !data[4].equals("") && !data[5].equals("") && !data[6].equals("") && !data[7].equals(""))
-							{
-								String url = "jdbc:mysql://"+data[0]+"/"+data[6]+"";
-								String tmp = ""+data[6]+""+data[7];
-								connexionsLiaison.add(new Liaison(url, data[4], data[5], data[7], connexionMongoDB.get(0), tmp));
-							}
 
 					}
 					br.close();

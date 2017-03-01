@@ -157,22 +157,11 @@ public class Liaison
 				
 				new MongoDBThread(collectionMongoDB, changements);
 				
-				try
-				{
-					Thread.sleep(10000);
-				}
-				catch(InterruptedException e)
-				{
-					e.printStackTrace();
-				}
-				
-				int i = 0;
 				sql = "SELECT * FROM "+table;
 				try {
 					rs = statement.executeQuery(sql);
 					while(rs.next())
 					{
-						i++;
 						System.out.println(rs.getString("UPDATE_DATE"));
 					}
 				} catch (SQLException e) {
@@ -184,6 +173,15 @@ public class Liaison
 				lastUpdate = sdf.format(dt);
 				sql = "SELECT * FROM "+table+" WHERE update_date > '"+lastUpdate+"'";
 				System.out.println(sql);
+				
+				try
+				{
+					Thread.sleep(10000);
+				}
+				catch(InterruptedException e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}

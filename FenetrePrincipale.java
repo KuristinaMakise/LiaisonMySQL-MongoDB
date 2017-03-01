@@ -48,13 +48,13 @@ public class FenetrePrincipale extends JFrame{
 	private ArrayList<Liaison> connexionsLiaison = new ArrayList<Liaison>();
 	private ArrayList<ConnexionMongoDB> connexionMongoDB = new ArrayList<ConnexionMongoDB>();
 	
-	private String[] entetes = {"Adresse de Connexion", "Port",  "Type Bdd", "Nom", "Login", "Mot de Passe", "Nom Bdd", "Nom Table"};
+	private String[] entetes = {"Adresse de Connexion", "Port",  "Type Bdd",  "Nom Bdd", "Nom Table", "Login", "Mot de Passe", "Connexion"};
 
 	private ModeleDynamiqueObjet mDO = new ModeleDynamiqueObjet();
 
 	public FenetrePrincipale() {
 
-		super("Fenetre Principale"); 							// Nom cont a changer
+		super("Aperçu des connexions"); 							// Nom cont a changer
 
 		panneauPrincipal = getContentPane();
 		panneauPrincipal.setPreferredSize(new Dimension(800, 400));
@@ -67,7 +67,7 @@ public class FenetrePrincipale extends JFrame{
 		listeCo = new JTable(mDO);
 		listeCo.setDefaultEditor(TypeBdd.class, new BddCellEditor());
 		ListSelectionModel selectionModel = listeCo.getSelectionModel();
-		listeCo.setSelectionMode(selectionModel.SINGLE_SELECTION);
+		listeCo.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		selectionModel.addListSelectionListener(new ListSelectionListener() {
 
 			public void valueChanged( ListSelectionEvent event )
@@ -138,10 +138,14 @@ public class FenetrePrincipale extends JFrame{
 		///gc.gridx = 7;
 
 		//panneauPrincipal.add(update, gc);
-
+		//this.setVisible(true);
 		this.add(panneauPrincipal);
-		this.setVisible(true);
 		pack();
+		JFrame fenetre = new FenetreCreationChamps(connexions, listeCo, connexionMongoDB, "MongoDB", this);
+		fenetre.setResizable(false);
+		fenetre.setAlwaysOnTop(true);
+		fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 	}
 
 	public class ModeleDynamiqueObjet extends AbstractTableModel {
@@ -171,53 +175,21 @@ public class FenetrePrincipale extends JFrame{
 			case 2:
 				return connexions.get(rowIndex).getBdd();
 			case 3:
-				return connexions.get(rowIndex).getNom();
-			case 4:
-				return connexions.get(rowIndex).getLogin();
-			case 5:
-				return connexions.get(rowIndex).getMdp();
-			case 6:
 				return connexions.get(rowIndex).getNomBdd();
-			case 7:
+			case 4:
 				return connexions.get(rowIndex).getNomTable();
+			case 5:
+				return connexions.get(rowIndex).getLogin();
+			case 6:
+				return connexions.get(rowIndex).getMdp();
+			case 7:
+				return connexions.get(rowIndex).getEtatCo();
 			default:
 				return null; //Ne devrait jamais arriver
 			}
 		}
 
-	/*	public void addConnexion(Connexion co) 
-		{
-			if(co.getBdd() == TypeBdd.MySQL)
-			{
-				connexions.add(co);
-				
-				/*String url = "jdbc:mysql://"+co.getAdresseCo()+"/"+co.getNomBdd()+"";
-				
-				System.out.println(url);
-				
-				Liaison l = new Liaison(url, co.getLogin(), co.getMdp(), co.getNomTable(), connexionMongoDB.get(0));
-				
-				
-				connexionsLiaison.add(new Liaison(url, co.getLogin(), co.getMdp(), co.getNomTable(), connexionMongoDB.get(0)));
-			}
-			else
-			{
-				String url = "mongodb://"+co.getAdresseCo();
-				String nom = co.getNom();
-				connexionMongoDB = new ConnexionMongoDB(url, nom);
-				
-				for(Liaison l : connexionsLiaison)
-				{
-					if(l.getConnexionMongoDB() == null)
-					{
-						l.setConnexionMongoDB(connexionMongoDB);
-					}
-				}
-			}
-				
-
-			fireTableRowsInserted(connexions.size() -1, connexions.size() -1);
-		}*/
+	
 
 		public void removeCollection(int rowIndex) {
 
@@ -237,7 +209,7 @@ public class FenetrePrincipale extends JFrame{
 			return Object.class;
 		}
 
-		@Override
+		/*@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			if(aValue != null){
 				Connexion connexion = connexions.get(rowIndex);
@@ -250,7 +222,7 @@ public class FenetrePrincipale extends JFrame{
 					connexion.setPort((String)aValue);
 					break;
 				case 2:
-					connexion.setBdd((TypeBdd)aValue);
+					connexion.setBdd((String)aValue);
 					break;
 				case 3:
 					connexion.setNom((String)aValue);
@@ -269,7 +241,7 @@ public class FenetrePrincipale extends JFrame{
 					break;
 				}
 			}
-		}
+		}*/
 	}
 
 
@@ -278,20 +250,50 @@ public class FenetrePrincipale extends JFrame{
 			super(new JComboBox(TypeBdd.values()));
 		}
 	}
+	
+	public class ConnexionRenderer extends DefaultTableCellRenderer {
+	    private String coReussie;
+	    private String coEchouee;
+	 
+	    public ConnexionRenderer() {
+	        super();
+	 
+	        coReussie = "O";
+	        coEchouee = "X";
+	    }
+	 
+	    @Override
+	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+	        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+	 
+	        Boolean co = (Boolean)value;
+	 
+	        setText("");
+	 
+	        if(co){
+	            setText(coReussie);
+	        } else {
+	            setText(coEchouee);
+	        }
+	 
+	        return this;
+	    }
+	}
+
 
 
 	public class AjoutChamps implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			JFrame fenetre = new FenetreCreationChamps(connexions, listeCo, connexionMongoDB);
+			JFrame fenetre = new FenetreCreationChamps(connexions, listeCo, connexionMongoDB, "MySQL", new JFrame());
 			//addConnexion(connexions.get(connexions.size() - 1));
 			fenetre.setResizable(false);
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);										//Ne fonctionne plus si on met le 'this' avant 
 		}
 		
-		public void addConnexion(Connexion co) 
-		{
+		//public void addConnexion(Connexion co) 
+		//{
 			/*if(co.getBdd() == TypeBdd.MySQL)
 			{
 				connexions.add(co);
@@ -322,7 +324,7 @@ public class FenetrePrincipale extends JFrame{
 				
 
 			//fireTableRowsInserted(connexions.size() -1, connexions.size() -1);
-		}
+		//}
 
 	}
 
