@@ -1,6 +1,8 @@
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoIterable;
+
 import java.util.logging.Level;
 
 /**
@@ -17,6 +19,7 @@ public class ConnexionMongoDB
 	 */
 	private MongoClient mongoClient;
 	private MongoDatabase database;
+	private boolean isConnected;
 	
 	/**
 	 * L'adresse IP et le nom de la base de données
@@ -32,14 +35,7 @@ public class ConnexionMongoDB
 	public ConnexionMongoDB(String connexionMongoDB, String databaseName)
 	{
 		setConnexion(connexionMongoDB, databaseName);
-		// setConnexion("mongodb://82.236.66.233", "Transporteur1");
-		
-		// Création de la connexion à MongoDB
-		// MongoClient mongoClient = new MongoClient("localhost", 27017);
-		//MongoClientURI connectionString = new MongoClientURI("mongodb://localhost:27017");
-		/*Document doc = new Document("testName", "Azerty")
-                .append("testAge", "123");
-		collection.insertOne(doc);*/
+		testerConnexion();
 	}
 	
 	/**
@@ -104,6 +100,24 @@ public class ConnexionMongoDB
 		mongoClient.close();
 	}
 
+	public void testerConnexion()
+	{
+		try
+		{
+			MongoIterable<String> test = mongoClient.listDatabaseNames();
+			test.first();
+			isConnected = true;
+		}
+		catch(Exception e)
+		{
+			isConnected = false;
+		}
+	}
+
+	public boolean isConnected()
+	{
+		return this.isConnected;
+	}
 }
 
 

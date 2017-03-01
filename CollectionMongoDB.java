@@ -115,8 +115,7 @@ public class CollectionMongoDB
 	 */
 	private void unChangement(List<String> keys, List<String> values)
 	{
-		BasicDBObject whereQuery = new BasicDBObject();
-		whereQuery.put(keys.get(0), values.get(0));
+		Document whereQuery = new Document(keys.get(0), values.get(0));
 		Document doc = collection.find(whereQuery).first();
 		if(doc == null)
 		{
@@ -137,6 +136,11 @@ public class CollectionMongoDB
 	{
 		System.out.println("Changements : "+changements.size());
 		List<String> keys = changements.get(0);
+		
+		for(String s : changements.get(0))
+		{
+			System.out.println(s);
+		}
 		
 		for(int i=1;i<changements.size();i++)
 		{

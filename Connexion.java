@@ -1,6 +1,5 @@
-
 public class Connexion {
-	
+
 	private String nom;
 	private String adresseCo;
 	private String port;
@@ -10,19 +9,20 @@ public class Connexion {
 	private String nomBdd;
 	private String nomTable;
 
-	public Connexion(String nom, String adresseCo, String port, String login, String mdp, TypeBdd bdd) {
-		
-		this.nom = nom;
+
+	public Connexion() {
+
+
+	}
+	public Connexion(String adresseCo, String port, TypeBdd bdd, String nom) {
+
 		this.adresseCo = adresseCo;
 		this.port = port;
-		this.login = login;
-		this.mdp = mdp;
 		this.bdd = bdd;
 	}
-	
-	public Connexion(String nom, String adresseCo, String port, String login, String mdp, TypeBdd bdd, String nomBdd, String nomTable) {
 
-		this.nom = nom;
+	public Connexion(String adresseCo, String port, TypeBdd bdd, String nom, String login, String mdp, String nomBdd, String nomTable) {
+
 		this.adresseCo = adresseCo;
 		this.port = port;
 		this.login = login;
@@ -55,7 +55,7 @@ public class Connexion {
 	public void setPort(String port) {
 		this.port = port;
 	}
-	
+
 	public String getLogin() {
 		return login;
 	}
@@ -63,7 +63,7 @@ public class Connexion {
 	public void setLogin(String login) {
 		this.login = login;
 	}
-	
+
 	public String getMdp() {
 		return mdp;
 	}
@@ -71,7 +71,7 @@ public class Connexion {
 	public void setMdp(String mdp) {
 		this.mdp = mdp;
 	}
-	
+
 	public TypeBdd getBdd() {
 		return bdd;
 	}
@@ -79,7 +79,7 @@ public class Connexion {
 	public void setBdd(TypeBdd bdd) {
 		this.bdd = bdd;
 	}
-	
+
 	public String getNomBdd() {
 		return nomBdd;
 	}
@@ -87,7 +87,7 @@ public class Connexion {
 	public void setNomBdd(String nomBdd) {
 		this.nomBdd = nomBdd;
 	}
-	
+
 	public String getNomTable() {
 		return nomTable;
 	}
