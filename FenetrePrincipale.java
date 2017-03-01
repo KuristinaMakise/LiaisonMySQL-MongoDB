@@ -48,7 +48,7 @@ public class FenetrePrincipale extends JFrame{
 	private ArrayList<Liaison> connexionsLiaison = new ArrayList<Liaison>();
 	private ArrayList<ConnexionMongoDB> connexionMongoDB = new ArrayList<ConnexionMongoDB>();
 	
-	private String[] entetes = {"Nom", "Adresse de Connexion", "Port", "Login", "Mot de Passe", "Type Bdd", "Nom Bdd", "Nom Table"};
+	private String[] entetes = {"Adresse de Connexion", "Port",  "Type Bdd", "Nom", "Login", "Mot de Passe", "Nom Bdd", "Nom Table"};
 
 	private ModeleDynamiqueObjet mDO = new ModeleDynamiqueObjet();
 
@@ -165,17 +165,17 @@ public class FenetrePrincipale extends JFrame{
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			switch(columnIndex){
 			case 0:
-				return connexions.get(rowIndex).getNom();
-			case 1:
 				return connexions.get(rowIndex).getAdresseCo();
-			case 2:
+			case 1:
 				return connexions.get(rowIndex).getPort();
-			case 3:
-				return connexions.get(rowIndex).getLogin();
-			case 4:
-				return connexions.get(rowIndex).getMdp();
-			case 5:
+			case 2:
 				return connexions.get(rowIndex).getBdd();
+			case 3:
+				return connexions.get(rowIndex).getNom();
+			case 4:
+				return connexions.get(rowIndex).getLogin();
+			case 5:
+				return connexions.get(rowIndex).getMdp();
 			case 6:
 				return connexions.get(rowIndex).getNomBdd();
 			case 7:
@@ -185,20 +185,20 @@ public class FenetrePrincipale extends JFrame{
 			}
 		}
 
-		public void addConnexion(Connexion co) 
+	/*	public void addConnexion(Connexion co) 
 		{
-			/*if(co.getBdd() == TypeBdd.MySQL)
+			if(co.getBdd() == TypeBdd.MySQL)
 			{
 				connexions.add(co);
 				
-				String url = "jdbc:mysql://"+co.getAdresseCo()+"/"+co.getNomBdd()+"";
+				/*String url = "jdbc:mysql://"+co.getAdresseCo()+"/"+co.getNomBdd()+"";
 				
 				System.out.println(url);
 				
 				Liaison l = new Liaison(url, co.getLogin(), co.getMdp(), co.getNomTable(), connexionMongoDB.get(0));
 				
 				
-				connexionsLiaison.add(new Liaison(url, co.getLogin(), co.getMdp(), co.getNomTable(), connexionMongoDB?.get(0)));
+				connexionsLiaison.add(new Liaison(url, co.getLogin(), co.getMdp(), co.getNomTable(), connexionMongoDB.get(0)));
 			}
 			else
 			{
@@ -213,22 +213,21 @@ public class FenetrePrincipale extends JFrame{
 						l.setConnexionMongoDB(connexionMongoDB);
 					}
 				}
-			}*/
+			}
 				
 
 			fireTableRowsInserted(connexions.size() -1, connexions.size() -1);
-		}
+		}*/
 
 		public void removeCollection(int rowIndex) {
 
 			connexions.remove(rowIndex);
 
 			fireTableRowsDeleted(rowIndex, rowIndex);
-			//suppression.setEnabled(false);
 		}
 
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			return true; //Toutes les cellules éditables
+			return false; //Toutes les cellules éditables
 		}
 
 		public Class getColumnClass(int columnIndex){
@@ -245,23 +244,27 @@ public class FenetrePrincipale extends JFrame{
 
 				switch(columnIndex){
 				case 0:
-					connexion.setNom((String)aValue);
-					break;
-				case 1:
 					connexion.setAdresseCo((String)aValue);
 					break;
-				case 2:
+				case 1:
 					connexion.setPort((String)aValue);
 					break;
-				case 3:
-					connexion.setLogin((String)aValue);
-				case 4:
-					connexion.setMdp((String)aValue);
-				case 5:
+				case 2:
 					connexion.setBdd((TypeBdd)aValue);
+					break;
+				case 3:
+					connexion.setNom((String)aValue);
+					break;
+				case 4:
+					connexion.setLogin((String)aValue);
+					break;
+				case 5:
+					connexion.setMdp((String)aValue);
+					break;
 				case 6:
 					connexion.setNomBdd((String)aValue);
-				case 7:
+					break;
+				case 7: 
 					connexion.setNomTable((String)aValue);
 					break;
 				}
@@ -327,7 +330,7 @@ public class FenetrePrincipale extends JFrame{
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			JFrame fenetre = new FenetreCreationCSV(connexions, listeCo);
+			JFrame fenetre = new FenetreCreationCSV(connexions, listeCo, connexionMongoDB);
 			fenetre.setResizable(false);
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);									
 		}
@@ -349,11 +352,9 @@ public class FenetrePrincipale extends JFrame{
 	}
 
 	/*public static void main(String[] args) {
-
 		JFrame fenetre = new FenetrePrincipale();
 		fenetre.setResizable(false);
 		fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}*/
 
 }
-

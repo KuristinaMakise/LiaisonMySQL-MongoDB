@@ -26,17 +26,15 @@ public class Liaison
 	private ArrayList<List<String>> donneesPourMongoDB;
 	private ArrayList<String> nomColonnes;
 	
-	public Liaison(String url, String login, String passwd, String table, ConnexionMongoDB connexionMongoDB)
+	public Liaison(String url, String login, String passwd, String table, ConnexionMongoDB connexionMongoDB, String collection)
 	{
 		this.tableMySQL = new ConnexionMySQL(url, login, passwd, table);
 		this.connexionMongoDB = connexionMongoDB;
-		this.collectionMongoDB = new CollectionMongoDB(connexionMongoDB.getDatabase(), table);
+		this.collectionMongoDB = new CollectionMongoDB(connexionMongoDB.getDatabase(), collection);
 		
 		donneesPourMongoDB = new ArrayList<List<String>>();
 		
 		nomColonnes = new ArrayList<String>();
-		
-		
 		
 		new MySQLThread(tableMySQL.getStmt(), table);
 	}
@@ -142,6 +140,8 @@ public class Liaison
 				}
 				changements.add(ls);
 				
+				ls = new ArrayList<String>();
+				
 				for(List<String> listeString : donneesPourMongoDB)
 				{
 					for(String value : listeString)
@@ -166,9 +166,24 @@ public class Liaison
 					e.printStackTrace();
 				}
 				
+				int i = 0;
+				sql = "SELECT * FROM "+table;
+				try {
+					rs = statement.executeQuery(sql);
+					while(rs.next())
+					{
+						i++;
+						System.out.println(rs.getString("UPDATE_DATE"));
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				dt = new Date();
 				lastUpdate = sdf.format(dt);
 				sql = "SELECT * FROM "+table+" WHERE update_date > '"+lastUpdate+"'";
+				System.out.println(sql);
 			}
 		}
 	}

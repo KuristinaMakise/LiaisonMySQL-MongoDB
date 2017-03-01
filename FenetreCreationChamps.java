@@ -49,12 +49,12 @@ public class FenetreCreationChamps extends JFrame {
 	private JLabel typeBdd;
 	private JComboBox choix;
 	private JButton valider;
-	
+
 	private JLabel bdd;
 	private JTextField textBdd;
 	private JLabel table;
 	private JTextField textTable;
-	
+
 
 	private ArrayList<Connexion> connexions;
 	private ArrayList<Liaison> connexionsLiaison = new ArrayList<Liaison>();
@@ -88,10 +88,10 @@ public class FenetreCreationChamps extends JFrame {
 
 		bas2 = new JPanel();
 		bas2.setLayout(new BoxLayout(bas2, BoxLayout.X_AXIS));
-		
+
 		bas3 = new JPanel();
 		bas3.setLayout(new BoxLayout(bas3, BoxLayout.X_AXIS));
-		
+
 		bas4 = new JPanel();
 		bas4.setLayout(new BoxLayout(bas4, BoxLayout.X_AXIS));
 
@@ -100,8 +100,6 @@ public class FenetreCreationChamps extends JFrame {
 		name.setPreferredSize(new Dimension(40,25));
 		//name.setMaximumSize(new Dimension(40,25));
 
-		haut.add(nom);
-		haut.add(name);
 
 
 		adresseCo = new JLabel("Adresse de connexion : ");
@@ -114,10 +112,10 @@ public class FenetreCreationChamps extends JFrame {
 		//textPort.setPreferredSize(new Dimension(10,10));
 		//textPort.setMaximumSize(new Dimension(10,10));
 
-		milieu.add(adresseCo);
-		milieu.add(addressCo);
-		milieu.add(port);
-		milieu.add(textPort);
+		haut.add(adresseCo);
+		haut.add(addressCo);
+		haut.add(port);
+		haut.add(textPort);
 
 		login = new JLabel("Login : ");
 		textLogin = new JTextField();
@@ -127,37 +125,48 @@ public class FenetreCreationChamps extends JFrame {
 		password = new JTextField();
 		password.setPreferredSize(new Dimension(100,25));
 
-		bas.add(login);
-		bas.add(textLogin);
-		bas.add(motDePasse);
-		bas.add(password);
-
 		typeBdd = new JLabel("Type base de données : ");
 		choix = new JComboBox(TypeBdd.values());
 		choix.addItem("");
 		choix.setSelectedItem("");
 		choix.addActionListener(new ChoixBdd());
-		
+
 		bdd = new JLabel("Nom base de données : ");
 		textBdd = new JTextField();
 		table = new JLabel("Nom table : ");
 		textTable = new JTextField();
-		
+
 
 		valider = new JButton("Valider");
 		valider.addActionListener(new BoutonValider());
 		valider.setPreferredSize(new Dimension(100,40));
 		valider.setMaximumSize(new Dimension(100,40));
 
-		bas2.add(typeBdd);
-		bas2.add(choix);
+		milieu.add(typeBdd);
+		milieu.add(choix);
+		bas.add(nom);
+		bas.add(name);
+		bas2.add(login);
+		bas2.add(textLogin);
+		bas2.add(motDePasse);
+		bas2.add(password);
 		bas3.add(bdd);
 		bas3.add(textBdd);
 		bas3.add(table);
 		bas3.add(textTable);
 		bas4.add(valider);
-		
-		bas3.setVisible(false);
+
+		nom.setEnabled(false);
+		name.setEnabled(false);
+		login.setEnabled(false);
+		textLogin.setEnabled(false);
+		motDePasse.setEnabled(false);
+		password.setEnabled(false);
+		bdd.setEnabled(false);
+		textBdd.setEnabled(false);
+		table.setEnabled(false);
+		textTable.setEnabled(false);
+
 
 		panneauPrincipal.add(haut);
 		panneauPrincipal.add(milieu);
@@ -182,89 +191,134 @@ public class FenetreCreationChamps extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
-			if(!name.getText().equals("")){
-				if(!addressCo.getText().equals("")){
-					if(!textPort.getText().equals("")){
-						if(!textLogin.getText().equals("")){
-							if(!password.getText().equals("")){
-								if(!choix.getSelectedItem().toString().equals("")){
-									if(choix.getSelectedItem().equals(TypeBdd.MongoDB))
+			if(!addressCo.getText().equals(""))
+			{
+				if(!textPort.getText().equals(""))
+				{
+					if(!choix.getSelectedItem().toString().equals(""))
+					{
+						if(choix.getSelectedItem().equals(TypeBdd.MongoDB))
+						{
+							if(!name.getText().equals(""))
+							{
+								connexions.add(new Connexion(addressCo.getText(), textPort.getText(), (TypeBdd) choix.getSelectedItem(), textBdd.getText()));
+								String url = "mongodb://"+addressCo.getText();
+								String nom = name.getText();
+
+								System.out.println(url);
+								System.out.println(nom);
+
+								connexionMongoDB.add(new ConnexionMongoDB(url, nom));
+
+								if(connexionMongoDB == null)
+								{
+									System.out.println("lol");
+								}
+
+								for(Liaison l : connexionsLiaison)
+								{
+									if(l.getConnexionMongoDB() == null)
 									{
-										connexions.add(new Connexion(name.getText(), addressCo.getText(), textPort.getText(), textLogin.getText(), password.getText(), (TypeBdd) choix.getSelectedItem()));
-										String url = "mongodb://"+addressCo.getText();
-										String nom = name.getText();
-										
-										System.out.println(url);
-										System.out.println(nom);
-										
-										connexionMongoDB.add(new ConnexionMongoDB(url, nom));
-										
-										if(connexionMongoDB == null)
+										l.setConnexionMongoDB(connexionMongoDB.get(0));
+									}
+								}
+								listeCo.updateUI();
+								dispose();
+							}
+						}
+						else
+						{
+							if(!textLogin.getText().equals(""))
+							{
+								if(!password.getText().equals(""))
+								{
+									if(!textBdd.getText().equals(""))
+									{
+										if(!textTable.getText().equals(""))
 										{
-											System.out.println("lol");
-										}
-										
-										for(Liaison l : connexionsLiaison)
-										{
-											if(l.getConnexionMongoDB() == null)
+											connexions.add(new Connexion(addressCo.getText(), textPort.getText(), (TypeBdd) choix.getSelectedItem(), name.getText(), textLogin.getText(), password.getText(), textBdd.getText(), textTable.getText()));
+
+											String url = "jdbc:mysql://"+addressCo.getText()+"/"+textBdd.getText()+"";
+
+											System.out.println(url);
+
+											//Liaison l = new Liaison(url, textLogin.getText(), password.getText(), textTable.getText(), connexionMongoDB);
+
+											if(connexionMongoDB == null)
 											{
-												l.setConnexionMongoDB(connexionMongoDB.get(0));
+												System.out.println("test");
 											}
+											
+											String tmp = ""+textBdd.getText()+""+textTable.getText();
+
+											connexionsLiaison.add(new Liaison(url, textLogin.getText(), password.getText(), textTable.getText(), connexionMongoDB.get(0), tmp));
+											listeCo.updateUI();
+											dispose();
 										}
 									}
-									else
-									{
-										if(!textBdd.getText().equals(""))
-										{
-											if(!textTable.getText().equals(""))
-											{
-												connexions.add(new Connexion(name.getText(), addressCo.getText(), textPort.getText(), textLogin.getText(), password.getText(), (TypeBdd) choix.getSelectedItem(), textBdd.getText(), textTable.getText()));
-													
-												String url = "jdbc:mysql://"+addressCo.getText()+"/"+textBdd.getText()+"";
-													
-												System.out.println(url);
-													
-												//Liaison l = new Liaison(url, textLogin.getText(), password.getText(), textTable.getText(), connexionMongoDB);
-													
-												if(connexionMongoDB == null)
-												{
-													System.out.println("test");
-												}
-													
-												connexionsLiaison.add(new Liaison(url, textLogin.getText(), password.getText(), textTable.getText(), connexionMongoDB.get(0)));
-											}
-										}
-									}
-									listeCo.updateUI();
-									dispose();
-								}//bdd
-							}//password
-						}//textLogin
-					}//textPort
-				}//addressCo
-			}//name	
+								}//password
+							}//textLogin
+						}
+
+					}//bdd
+
+				}//textPort
+			}//addressCo
 			//valider.setEnabled(false);
 
 		}
 
 	}
-	
+
 	public class ChoixBdd implements ActionListener
 	{
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(choix.getSelectedItem().equals(TypeBdd.MySQL)){
-				bas3.setVisible(true);
+
+				nom.setEnabled(false);
+				name.setEnabled(false);
+				login.setEnabled(true);
+				textLogin.setEnabled(true);
+				motDePasse.setEnabled(true);
+				password.setEnabled(true);
+				bdd.setEnabled(true);
+				textBdd.setEnabled(true);
+				table.setEnabled(true);
+				textTable.setEnabled(true);
 			}
 			else
-				bas3.setVisible(false);
+				if(choix.getSelectedItem().equals(TypeBdd.MongoDB))
+				{
+					nom.setEnabled(true);
+					name.setEnabled(true);
+					login.setEnabled(false);
+					textLogin.setEnabled(false);
+					motDePasse.setEnabled(false);
+					password.setEnabled(false);
+					bdd.setEnabled(false);
+					textBdd.setEnabled(false);
+					table.setEnabled(false);
+					textTable.setEnabled(false);
+				}
+				else{
+					nom.setEnabled(false);
+					name.setEnabled(false);
+					login.setEnabled(false);
+					textLogin.setEnabled(false);
+					motDePasse.setEnabled(false);
+					password.setEnabled(false);
+					bdd.setEnabled(false);
+					textBdd.setEnabled(false);
+					table.setEnabled(false);
+					textTable.setEnabled(false);
+				}
 		}
-		
+
 	}
 
 	/*public static void main(String[] args) {
-
 		JFrame fenetre = new FenetreCreationChamps();
 		fenetre.setResizable(false);
 		fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
