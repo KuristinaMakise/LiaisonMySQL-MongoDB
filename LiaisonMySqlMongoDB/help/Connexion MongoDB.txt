@@ -1,0 +1,10 @@
+
+Connexion MongoDB :
+
+Install MongoDB Community Edition on Windows :
+https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
+
+MongoDB Driver Quick Start :
+http://mongodb.github.io/mongo-java-driver/3.4/driver/getting-started/quick-start/
+
+https://www.mongodb.com/blog/post/introducing-30-java-driver

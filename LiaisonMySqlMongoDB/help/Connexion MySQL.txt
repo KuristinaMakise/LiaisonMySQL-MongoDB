@@ -1,0 +1,41 @@
+
+Connexion MySQL :
+
+MySQL port : 3306
+MySQL Root Password : 3306
+
+https://openclassrooms.com/courses/administrez-vos-bases-de-donnees-avec-mysql/installation-de-mysql
+
+https://dev.mysql.com/downloads/mysql/
+
+set PATH=%PATH%;C:\"Program Files"\MySQL\"MySQL Server 5.6"\bin
+
+mysql -u root -p
+
+Pour se déco : quit ou exit
+
+
+CREATE DATABASE Transporteur1;
+
+show databases;
+
+use Transporteur1;
+
+
+création de la table et les insert
+
+SELECT * FROM TRAJET;
+
+
+EN DISTANT :
+
+GRANT ALL PRIVILEGES ON Transporteur1.* TO xaba IDENTIFIED BY "xaba";
+
+flush privileges;
+
+
+
+
+mysql -h adresse_ip_de_votre_serveur -u nom_utilisateur -p'mot_de_passe'
+
+mysql -h 192.168.1.91 -u xaba -p"xaba"
